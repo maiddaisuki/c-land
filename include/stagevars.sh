@@ -80,7 +80,7 @@ stagevars() {
 	pkgdir=${buildroot}/packages
 	test -d "${pkgdir}" || install -d "${pkgdir}" || exit
 
-	destdir=${buildroot}/destdir
+	destdir=${buildroot}/destdir/$1
 	test -d "${destdir}" || install -d "${destdir}" || exit
 
 	return 0
