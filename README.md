@@ -71,7 +71,7 @@ C Libraries.
 
 The `config` subdirectory contains files to be modified by the user.
 
-You must always set `PREFIX`, `SRCDIR`, `BUILDDIR` and `DESTDIR` in
+You must always set `PREFIX`, `SRCDIR` and `BUILDDIR` variables in
 [config/dirs.sh](/config/dirs.sh).  
 You also use this file to specify directories containing packages' source code.
 
