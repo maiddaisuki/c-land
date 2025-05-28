@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# BUILD_SYSTEM: cmake
+
+##
+# Build PACKAGE (options as of version VERSION)
+#
+# List package-specific options, if any
+#
+
+PACKAGE_configure() {
+	local log_file=${logdir}/configure.log
+
+	local options="
+		-DCMAKE_BUILD_TYPE=Release
+
+		-DBUILD_SHARED_LIBS=${build_shared_libs}
+		${cmake_position_independent_code}
+
+		-DCMAKE_INSTALL_PREFIX=${prefix}
+		-DCMAKE_INSTALL_LIBDIR=${libdir}
+	"
+
+	if test -d CMakeFiles; then
+		rm -f ${logdir}/*
+	fi
+
+	log "%s: configuring\n" ${package}
+
+	cmake -S ${srcdir} -B . --fresh \
+		-DCMAKE_C_COMPILER="${cmake_c_compiler}" \
+		-DCMAKE_C_FLAGS="${cppflags}" \
+		-DCMAKE_C_FLAGS_RELEASE="${cflags}" \
+		-DCMAKE_CXX_COMPILER="${cmake_cxx_compiler}" \
+		-DCMAKE_CXX_FLAGS="${cppflags}" \
+		-DCMAKE_CXX_FLAGS_RELEASE="${cxxflags}" \
+		-DCMAKE_EXE_LINKER_FLAGS="${ldflags}" \
+		-DCMAKE_SHARED_LINKER_FLAGS="${ldflags}" \
+		${options} \
+		>>${log_file} 2>&1
+
+	test $? -eq 0 || die "${package}: configuration failed"
+}
+
+PACKAGE_build() {
+	_cmake_build
+}
+
+PACKAGE_check() {
+	if ${CMAKE_TEST}; then
+		_cmake_check
+	fi
+}
+
+PACKAGE_stage() {
+	_cmake_stage
+}
+
+PACKAGE_pack() {
+	_cmake_pack
+}
+
+PACKAGE_install() {
+	_cmake_install
+}
+
+PACKAGE_main() {
+	_cmake_main PACKAGE ${package_SRCDIR}
+}
